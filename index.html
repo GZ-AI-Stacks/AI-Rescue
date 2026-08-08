@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI.-Ready Rescue &mdash; USB-Datenrettung f&uuml;r Windows</title>
+<meta name="description" content="AI.-Ready Rescue: gel&ouml;schte Dateien von USB-Sticks &amp; externen Laufwerken wiederherstellen. Quick-Scan, Deep-Scan, keine Cloud, kein Abo. Einmal kaufen, jederzeit nutzen.">
+<meta name="theme-color" content="#00ffaa">
+<meta property="og:title" content="AI.-Ready Rescue &mdash; USB-Datenrettung f&uuml;r Windows">
+<meta property="og:description" content="Gel&ouml;schte Dateien von USB-Sticks &amp; externen Laufwerken wiederherstellen. Quick-Scan, Deep-Scan, 100% offline.">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="de_DE">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --neon:#00ffaa; --neon2:#00b4ff; --neon3:#8c00ff; --neon-bloom:#ff0080;
+  --bg:#06081a; --bg2:#0a0e28; --bg3:#0e1438;
+  --border:#1e2246; --border2:#00ffaa30;
+  --text:#c8d4f0; --text-dim:#5a6a90; --text-bright:#e8ecff;
+  --warn:#ff0080;
+  --shadow:0 0 30px #00ffaa20;
+  --zoom:1;
+}
+:root[data-theme="light"]{
+  --neon:#007a55; --neon2:#0072b0; --neon3:#5a00b0; --neon-bloom:#b00058;
+  --bg:#f4f6fb; --bg2:#ffffff; --bg3:#e8ecf8;
+  --border:#c0c8e0; --border2:#007a5540;
+  --text:#1a2440; --text-dim:#5a6890; --text-bright:#0a1024;
+  --warn:#b00058;
+  --shadow:0 2px 20px rgba(0,122,85,0.15);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth; font-size:calc(17px * var(--zoom))}
+body{font-family:'Rajdhani',system-ui,-apple-system,sans-serif; background:var(--bg); color:var(--text); line-height:1.6; min-height:100vh; overflow-x:hidden; transition:background 0.25s, color 0.25s}
+body::before{
+  content:''; position:fixed; inset:0; z-index:-1; pointer-events:none;
+  background:
+    radial-gradient(ellipse at 20% 0%, rgba(0,255,170,0.08), transparent 50%),
+    radial-gradient(ellipse at 80% 100%, rgba(0,180,255,0.06), transparent 50%);
+}
+a{color:var(--neon2); text-decoration:none}
+a:hover, a:focus{color:var(--neon); outline:none}
+a:focus, button:focus{outline:2px solid var(--neon); outline-offset:3px}
+
+.skip{position:absolute; left:-9999px}
+.skip:focus{left:1rem; top:1rem; background:var(--neon); color:#000; padding:0.6rem 1rem; z-index:999; font-weight:700}
+
+.site-header{
+  padding:2.2rem 1.5rem 1.4rem; max-width:1100px; margin:0 auto;
+  display:flex; align-items:center; gap:1.2rem; flex-wrap:wrap;
+}
+.site-header .controls{margin-left:auto; display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap}
+.ctrl-btn{
+  background:transparent; border:1px solid var(--border2); color:var(--neon);
+  font-family:'Share Tech Mono',monospace; font-size:0.85rem; font-weight:700;
+  padding:0.45rem 0.7rem; cursor:pointer; border-radius:3px;
+  min-width:38px; min-height:38px;
+  display:inline-flex; align-items:center; justify-content:center;
+  transition:all 0.18s ease; letter-spacing:0.05em;
+}
+.ctrl-btn:hover, .ctrl-btn:focus{background:var(--neon); color:var(--bg); outline:none}
+.ctrl-btn[aria-pressed="true"]{background:var(--neon); color:var(--bg)}
+.zoom-group{display:inline-flex; align-items:stretch; border:1px solid var(--border2); border-radius:3px; overflow:hidden}
+.zoom-group .ctrl-btn{border:none; border-radius:0; border-right:1px solid var(--border2)}
+.zoom-group .ctrl-btn:last-child{border-right:none}
+.zoom-level{
+  font-family:'Share Tech Mono',monospace; font-size:0.85rem;
+  padding:0 0.7rem; display:inline-flex; align-items:center; justify-content:center;
+  color:var(--text-bright); background:var(--bg2);
+  min-width:54px; border-right:1px solid var(--border2);
+  letter-spacing:0.05em;
+}
+@media (max-width:600px){
+  .site-header{padding:1.4rem 1rem 1rem; gap:0.8rem}
+  .site-header .controls{margin-left:0; width:100%; justify-content:flex-end}
+}
+.logo-svg{width:56px; height:56px; filter:drop-shadow(0 0 12px var(--neon))}
+.logo-svg circle, .logo-svg path{stroke:var(--neon); fill:none; stroke-width:3}
+.brand-block h1{
+  font-family:'Share Tech Mono',monospace;
+  font-size:1.9rem; color:var(--neon);
+  text-shadow:0 0 20px currentColor; letter-spacing:0.05em;
+}
+.brand-block .subtitle{
+  font-family:'Share Tech Mono',monospace; font-size:0.78rem;
+  letter-spacing:0.22em; color:var(--text-dim); margin-top:0.2rem;
+}
+
+main{display:block}
+
+.hero{
+  max-width:1100px; margin:1rem auto 3rem; padding:0 1.5rem;
+  display:grid; grid-template-columns:1.1fr 1fr; gap:3rem; align-items:center;
+}
+@media (max-width:840px){.hero{grid-template-columns:1fr; gap:1.5rem}}
+.hero-text h2{
+  font-family:'Rajdhani',sans-serif; font-weight:700;
+  font-size:clamp(2rem, 4.5vw, 3.1rem); line-height:1.1;
+  color:var(--text-bright); margin-bottom:1rem; letter-spacing:-0.005em;
+}
+.hero-text h2 em{font-style:normal; color:var(--neon); text-shadow:0 0 20px var(--neon)}
+.hero-text .lead{font-size:1.12rem; color:var(--text); margin-bottom:1.5rem; line-height:1.55}
+.hero-cta{display:flex; flex-wrap:wrap; gap:0.9rem; margin-top:1.6rem}
+
+.btn{
+  display:inline-flex; align-items:center; gap:0.5rem;
+  padding:0.9rem 1.6rem;
+  font-family:'Share Tech Mono',monospace; font-size:0.92rem; font-weight:700;
+  letter-spacing:0.1em; text-transform:uppercase; text-decoration:none;
+  border:2px solid var(--neon); color:var(--neon); background:transparent;
+  cursor:pointer; transition:all 0.18s ease;
+  border-radius:2px;
+}
+.btn:hover, .btn:focus{background:var(--neon); color:#000; outline:none}
+.btn-primary{
+  background:linear-gradient(180deg, var(--neon), #00cc88);
+  color:#001a10; border-color:var(--neon);
+  box-shadow:0 4px 24px rgba(0,255,170,0.3), inset 0 1px 0 rgba(255,255,255,0.25);
+}
+.btn-primary:hover, .btn-primary:focus{
+  transform:translateY(-1px); color:#000;
+  box-shadow:0 6px 30px rgba(0,255,170,0.45), inset 0 1px 0 rgba(255,255,255,0.3);
+}
+.btn-secondary{border-color:var(--neon2); color:var(--neon2)}
+.btn-secondary:hover, .btn-secondary:focus{background:var(--neon2); color:#000}
+.btn-disabled, .btn[aria-disabled="true"]{
+  opacity:0.55; cursor:not-allowed; filter:grayscale(0.4); position:relative;
+}
+.btn-disabled::after, .btn[aria-disabled="true"]::after{
+  content:'DEMNÄCHST'; position:absolute; top:-10px; right:-8px;
+  background:var(--neon-bloom); color:#fff;
+  font-size:0.55rem; padding:2px 7px;
+  letter-spacing:0.15em; border-radius:2px;
+  font-weight:700; transform:rotate(3deg);
+}
+.btn-disabled:hover, .btn[aria-disabled="true"]:hover{
+  background:transparent; color:var(--neon-bloom); transform:none; box-shadow:none;
+}
+
+.hero-visual{
+  position:relative; border:1px solid var(--border2);
+  background:var(--bg2); border-radius:6px;
+  box-shadow:var(--shadow); overflow:hidden;
+  min-height:280px; display:flex; align-items:center; justify-content:center;
+}
+.hero-visual img{display:block; width:100%; height:auto; border-radius:5px}
+.hero-visual .placeholder{
+  padding:2.5rem; text-align:center; color:var(--text-dim);
+  font-family:'Share Tech Mono',monospace; font-size:0.85rem; line-height:1.8;
+}
+.hero-visual .placeholder .big{font-size:3rem; display:block; margin-bottom:0.8rem}
+
+.briefing-bar{max-width:1100px; margin:0 auto 3rem; padding:0 1.5rem}
+.briefing-inner{
+  background:var(--bg2); color:var(--text);
+  border:1px solid var(--border2); border-radius:3px;
+  padding:1.1rem 1.4rem; display:flex; flex-wrap:wrap;
+  gap:1.5rem; align-items:center;
+  font-family:'Share Tech Mono',monospace; font-size:0.82rem;
+  box-shadow:var(--shadow);
+}
+.led{display:inline-flex; align-items:center; gap:0.5rem; color:var(--text-dim)}
+.led-dot{
+  width:8px; height:8px; border-radius:50%; background:var(--neon);
+  box-shadow:0 0 8px var(--neon); animation:pulse 2s ease-in-out infinite;
+}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.35}}
+.led strong{color:var(--neon); letter-spacing:0.1em}
+
+section{max-width:1100px; margin:0 auto 4rem; padding:0 1.5rem}
+.section-title{
+  font-family:'Share Tech Mono',monospace;
+  font-size:1.8rem; color:var(--neon);
+  text-align:center; margin-bottom:0.4rem;
+  text-shadow:0 0 18px var(--neon);
+  letter-spacing:0.06em;
+}
+.section-title::after{
+  content:''; display:block; width:60px; height:2px;
+  background:var(--neon); margin:0.7rem auto 0;
+  box-shadow:0 0 10px var(--neon);
+}
+.section-sub{text-align:center; color:var(--text-dim); max-width:680px; margin:0 auto 2.5rem; font-style:italic}
+
+.features-grid{display:grid; grid-template-columns:repeat(auto-fit, minmax(260px,1fr)); gap:1.4rem}
+.feature-tile{
+  background:var(--bg3); border:1px solid var(--border2);
+  border-left:4px solid var(--neon);
+  padding:1.3rem 1.4rem; border-radius:2px;
+  box-shadow:0 2px 12px rgba(0,0,0,0.4);
+  transition:transform 0.18s, box-shadow 0.18s;
+}
+.feature-tile:hover, .feature-tile:focus-within{transform:translateY(-3px); box-shadow:0 8px 28px rgba(0,255,170,0.18)}
+.feature-tile.accent2{border-left-color:var(--neon2)}
+.feature-tile.accent3{border-left-color:var(--neon3)}
+.feature-tile.bloom{border-left-color:var(--neon-bloom)}
+.feature-icon{font-size:1.9rem; margin-bottom:0.5rem; display:block}
+.feature-tile h4{
+  font-family:'Share Tech Mono',monospace; font-size:1.05rem;
+  color:var(--text-bright); margin-bottom:0.4rem; letter-spacing:0.04em;
+}
+.feature-tile p{font-size:0.94rem; color:var(--text); line-height:1.5}
+
+.compare{background:var(--bg2); border:1px solid var(--border2); border-radius:6px; padding:2rem 1.8rem; box-shadow:var(--shadow)}
+.compare-grid{display:grid; grid-template-columns:1fr 1fr; gap:1.8rem; margin-top:1.5rem}
+@media (max-width:700px){.compare-grid{grid-template-columns:1fr}}
+.compare-col h4{font-family:'Share Tech Mono',monospace; font-size:0.85rem; letter-spacing:0.15em; text-transform:uppercase; margin-bottom:0.8rem}
+.compare-col.bad h4{color:var(--warn)}
+.compare-col.good h4{color:var(--neon)}
+.compare-col ul{list-style:none; font-size:0.96rem}
+.compare-col li{padding:0.5rem 0; border-bottom:1px dotted var(--border); display:flex; gap:0.6rem; align-items:flex-start}
+.compare-col.bad li::before{content:'✕'; color:var(--warn); font-weight:700; flex-shrink:0}
+.compare-col.good li::before{content:'✓'; color:var(--neon); font-weight:700; flex-shrink:0}
+
+.price-section{
+  background:linear-gradient(160deg, var(--bg2), var(--bg3));
+  border:1px solid var(--border2);
+  border-radius:8px; padding:2.4rem 2rem;
+  text-align:center; position:relative; overflow:hidden;
+  box-shadow:var(--shadow);
+}
+.price-section::before{
+  content:''; position:absolute; inset:0;
+  background:radial-gradient(ellipse at center top, rgba(0,255,170,0.14), transparent 60%);
+  pointer-events:none;
+}
+.price-section > *{position:relative}
+.price-section-label{
+  font-family:'Share Tech Mono',monospace; font-size:0.85rem;
+  letter-spacing:0.22em; text-transform:uppercase;
+  color:var(--neon-bloom); margin-bottom:0.4rem;
+}
+.price-section-title{margin-top:0; color:var(--text-bright); text-shadow:none}
+.price-section-sub{color:var(--text-dim); max-width:560px; margin:0.6rem auto 1.6rem}
+
+.price-single-wrap{display:flex; justify-content:center; margin:1.5rem auto 0; max-width:460px}
+.price-single-wrap .price-card{width:100%}
+
+.price-card{
+  background:var(--bg); border:1px solid var(--border2);
+  padding:1.6rem 1.4rem; border-radius:4px;
+  text-align:left; position:relative;
+}
+.price-card .label{
+  font-family:'Share Tech Mono',monospace; font-size:0.75rem;
+  letter-spacing:0.2em; color:var(--text-dim);
+  text-transform:uppercase; margin-bottom:0.4rem;
+}
+.price-card .tag{
+  font-family:'Share Tech Mono',monospace; font-size:2.4rem;
+  font-weight:700; color:var(--neon); line-height:1;
+  text-shadow:0 0 20px var(--neon);
+}
+.price-card .tag .cents{font-size:1.4rem; vertical-align:super}
+.price-card .note{font-size:0.85rem; color:var(--text-dim); margin:0.4rem 0 1rem}
+.price-card .feat{list-style:none; font-size:0.92rem; margin:1rem 0}
+.price-card .feat li{padding:0.3rem 0; padding-left:1.4rem; position:relative; color:var(--text)}
+.price-card .feat li::before{content:'✓'; position:absolute; left:0; top:0.3rem; color:var(--neon)}
+.price-card .btn{width:100%; justify-content:center; margin-top:0.6rem}
+
+.legal-fine{margin-top:1.6rem; font-size:0.78rem; color:var(--text-dim); line-height:1.5}
+.legal-fine a{color:var(--neon-bloom)}
+
+.safety-note{
+  background:var(--bg2); border:1px solid var(--border2);
+  border-left:4px solid var(--warn);
+  padding:1.1rem 1.3rem; margin:2rem 0;
+  font-size:0.94rem; color:var(--text); border-radius:0 3px 3px 0;
+}
+.safety-note strong{color:var(--warn)}
+
+details{background:var(--bg2); border:1px solid var(--border2); border-radius:3px; padding:0.9rem 1.2rem; margin-bottom:0.7rem}
+details summary{cursor:pointer; font-family:'Share Tech Mono',monospace; font-weight:700; color:var(--neon); font-size:0.98rem; outline:none; letter-spacing:0.03em}
+details summary::-webkit-details-marker{display:none}
+details summary::before{content:'+ '; color:var(--neon-bloom); font-family:'Share Tech Mono',monospace}
+details[open] summary::before{content:'− '}
+details p{margin-top:0.7rem; font-size:0.96rem; color:var(--text); line-height:1.55}
+
+.site-footer{
+  background:var(--bg2); color:var(--text-dim);
+  border-top:1px solid var(--border2);
+  padding:2rem 1.5rem; text-align:center;
+  font-size:0.88rem; margin-top:4rem;
+}
+.site-footer .links{display:flex; flex-wrap:wrap; justify-content:center; gap:0.8rem 1.5rem; margin-bottom:1rem}
+.site-footer a{color:var(--neon)}
+.site-footer .copy{opacity:0.7}
+
+@media (prefers-reduced-motion:reduce){*, *::before, *::after{animation:none !important; transition:none !important}}
+@media (prefers-contrast:more){body{background:#000; color:#fff} .feature-tile, .compare, .price-card{border-width:2px}}
+@media (max-width:560px){
+  section{padding:0 1rem}
+  .hero{padding:0 1rem}
+  .price-section{padding:1.6rem 1rem}
+  .compare{padding:1.4rem 1rem}
+  .feature-tile{padding:1rem}
+}
+@media (min-width:1400px){.site-header, section, .hero, .briefing-bar{max-width:1280px}}
+</style>
+</head>
+<body>
+
+<a href="#inhalt" class="skip">Zum Inhalt springen</a>
+
+<header class="site-header" role="banner">
+  <svg class="logo-svg" viewBox="0 0 100 100" aria-hidden="true">
+    <circle cx="50" cy="50" r="45"/>
+    <path d="M30 35 L30 65 L70 65 L70 45 L55 45 L55 35 Z"/>
+    <path d="M40 50 L48 58 L62 42" stroke-width="4"/>
+  </svg>
+  <div class="brand-block">
+    <h1>AI.-READY RESCUE</h1>
+    <div class="subtitle">USB-Datenrettung &middot; Quick-Scan &middot; Deep-Scan</div>
+  </div>
+  <div class="controls" role="toolbar" aria-label="Seitensteuerung">
+    <div class="zoom-group" role="group" aria-label="Schriftgröße">
+      <button type="button" class="ctrl-btn" id="zoomOutBtn" aria-label="Schrift verkleinern" title="Verkleinern (Strg + Minus)">−</button>
+      <span class="zoom-level" id="zoomLabel" aria-live="polite" aria-atomic="true">100%</span>
+      <button type="button" class="ctrl-btn" id="zoomInBtn" aria-label="Schrift vergrößern" title="Vergrößern (Strg + Plus)">+</button>
+      <button type="button" class="ctrl-btn" id="zoomResetBtn" aria-label="Schriftgröße zurücksetzen" title="Zurücksetzen (Strg + 0)">RESET</button>
+    </div>
+    <button type="button" class="ctrl-btn" id="themeBtn" aria-label="Hell-/Dunkelmodus umschalten" aria-pressed="false" title="Theme wechseln">🌙</button>
+  </div>
+</header>
+
+<main id="inhalt">
+
+  <section class="hero">
+    <div class="hero-text">
+      <h2>Versehentlich gelöscht? <em>Kein Grund zur Panik.</em></h2>
+      <p class="lead">AI.-Ready Rescue durchsucht USB-Sticks, SD-Karten und externe
+        Laufwerke nach gelöschten Dateien und stellt sie wieder her &mdash; mit Quick-Scan
+        für den schnellen Fall und Deep-Scan für den Rohzugriff auf den Datenträger.
+        Läuft lokal auf deinem Windows-PC. Einmal kaufen, jederzeit nutzen. Kein Konto,
+        kein Abo, keine Cloud.</p>
+      <div class="hero-cta">
+        <a class="btn btn-primary" href="#preis">💾 Vollversion ansehen</a>
+        <a class="btn btn-secondary" href="Dokumente/Technisches-Datenblatt.html">📄 Technisches Datenblatt</a>
+      </div>
+    </div>
+    <aside class="hero-visual" aria-label="AI.-Ready Rescue-Vorschau">
+      <div class="placeholder">
+        <span class="big" aria-hidden="true">💾</span>
+        App-Screenshot folgt
+      </div>
+    </aside>
+  </section>
+
+  <div class="briefing-bar">
+    <div class="briefing-inner">
+      <span class="led"><span class="led-dot" aria-hidden="true"></span>STATUS: <strong>EINSATZBEREIT</strong></span>
+      <span class="led">// 100% OFFLINE</span>
+      <span class="led">// KEIN TRACKING</span>
+      <span class="led">// KEIN ABO</span>
+      <span class="led">// EINMALKAUF</span>
+    </div>
+  </div>
+
+  <section id="features">
+    <h3 class="section-title">Was AI.-Ready Rescue kann</h3>
+    <p class="section-sub">Zwei Scan-Modi, klare Statusanzeige, direkte Wiederherstellung &mdash; ohne Cloud-Upload.</p>
+    <div class="features-grid">
+
+      <article class="feature-tile">
+        <span class="feature-icon" aria-hidden="true">⚡</span>
+        <h4>Quick-Scan</h4>
+        <p>Durchsucht das Dateisystem des Datenträgers in Sekunden nach kürzlich gelöschten
+          Dateien &mdash; ideal für den Klassiker "aus Versehen geleert".</p>
+      </article>
+
+      <article class="feature-tile accent2">
+        <span class="feature-icon" aria-hidden="true">🔍</span>
+        <h4>Deep-Scan (Raw Disk Access)</h4>
+        <p>Rohzugriff auf den Datenträger jenseits des Dateisystem-Index &mdash; findet auch
+          Dateien, die auf normalem Weg nicht mehr sichtbar sind.</p>
+      </article>
+
+      <article class="feature-tile accent3">
+        <span class="feature-icon" aria-hidden="true">📊</span>
+        <h4>Wiederherstellbarkeits-Status</h4>
+        <p>Jede gefundene Datei bekommt eine Einschätzung (gut / teilweise / schlecht),
+          damit du siehst, wie realistisch die Rettung ist &mdash; bevor du Zeit investierst.</p>
+      </article>
+
+      <article class="feature-tile bloom">
+        <span class="feature-icon" aria-hidden="true">📁</span>
+        <h4>Gezielte Wiederherstellung</h4>
+        <p>Einzelne Dateien oder ganze Auswahl an einen frei wählbaren Zielort
+          wiederherstellen &mdash; nie zurück auf den Quell-Datenträger.</p>
+      </article>
+
+      <article class="feature-tile accent3">
+        <span class="feature-icon" aria-hidden="true">🔒</span>
+        <h4>100% lokal &amp; offline</h4>
+        <p>Keine Internetverbindung nötig, keine Telemetrie, keine Cloud. Deine Dateien
+          verlassen niemals dein Gerät.</p>
+      </article>
+
+      <article class="feature-tile accent2">
+        <span class="feature-icon" aria-hidden="true">🎛</span>
+        <h4>Übersichtliche Oberfläche</h4>
+        <p>Laufwerksauswahl, Fortschrittsanzeige, sortierbare Trefferliste mit Tastenkürzeln
+          (F5 Quick-Scan, Strg+D Deep-Scan, Strg+R Wiederherstellen).</p>
+      </article>
+
+    </div>
+  </section>
+
+  <section id="vergleich">
+    <h3 class="section-title">Teurer Profi-Service vs. AI.-Ready Rescue</h3>
+    <div class="compare">
+      <p style="text-align:center; color:var(--text-dim); font-style:italic;">Nicht jede Datenrettung braucht ein Labor. Für den häufigsten Fall &mdash; versehentlich gelöscht &mdash; reicht oft ein gutes Tool.</p>
+      <div class="compare-grid">
+        <div class="compare-col bad">
+          <h4>Profi-Datenrettungsdienst</h4>
+          <ul>
+            <li>Oft mehrere Hundert Euro pro Auftrag</li>
+            <li>Datenträger muss eingeschickt werden</li>
+            <li>Wartezeit von Tagen bis Wochen</li>
+            <li>Fremde sehen deine privaten Dateien</li>
+          </ul>
+        </div>
+        <div class="compare-col good">
+          <h4>AI.-Ready Rescue</h4>
+          <ul>
+            <li>Einmaliger Endpreis &mdash; fertig</li>
+            <li>Läuft sofort auf deinem eigenen PC</li>
+            <li>Ergebnis in Minuten statt Wochen</li>
+            <li>100% lokal &mdash; nichts verlässt dein Gerät</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="safety-note" role="note">
+      <strong>⚠ Wichtiger Hinweis:</strong> AI.-Ready Rescue ist ein Werkzeug zur
+      Wiederherstellung gelöschter Dateien, <strong>keine Garantie für eine erfolgreiche
+      Datenrettung</strong>. Der Erfolg hängt vom Zustand des Datenträgers und davon ab,
+      ob die gelöschten Bereiche bereits überschrieben wurden. Je früher du scannst,
+      desto besser die Chancen. Details siehe <a href="agb.html">AGB</a>.
+    </div>
+  </section>
+
+  <section id="preis">
+    <div class="price-section">
+      <div class="price-section-label">FREISCHALTUNG</div>
+      <h3 class="section-title price-section-title">AI.-Ready Rescue Vollversion</h3>
+      <p class="price-section-sub">Einmal kaufen, jederzeit nutzen. Updates &amp; Sicherheits-Patches 3 Jahre inklusive.</p>
+
+      <div class="price-single-wrap">
+        <div class="price-card">
+          <div class="label">Vollversion &middot; Einmalkauf</div>
+          <div class="tag">24,<span class="cents">90 €</span></div>
+          <div class="note">Einmaliger Endpreis &middot; § 19 UStG, keine Umsatzsteuer</div>
+          <ul class="feat">
+            <li>Quick-Scan &amp; Deep-Scan (Raw Disk Access)</li>
+            <li>Wiederherstellbarkeits-Status pro Datei</li>
+            <li>Gezielte Wiederherstellung an frei wählbaren Ort</li>
+            <li>100% lokal, kein Cloud-Upload</li>
+            <li>Updates &amp; Patches 3 Jahre inklusive</li>
+            <li>Nutzung auf beliebig vielen eigenen Geräten</li>
+          </ul>
+          <a class="btn btn-primary" id="ctaBuy" href="#" aria-disabled="true">💾 Jetzt sichern &mdash; 24,90 €</a>
+        </div>
+      </div>
+
+      <p class="legal-fine">
+        Endpreis &mdash; gemäß § 19 UStG wird keine Umsatzsteuer ausgewiesen. Verkauf und Abwicklung über Digistore24.
+      </p>
+    </div>
+  </section>
+
+  <section id="faq">
+    <h3 class="section-title">Häufige Fragen</h3>
+    <div style="max-width:800px; margin:0 auto;">
+      <details>
+        <summary>Auf welchen Systemen läuft AI.-Ready Rescue?</summary>
+        <p>Windows 10 und Windows 11 (64-Bit). Für den Deep-Scan (Rohzugriff auf den
+          Datenträger) sind Administratorrechte erforderlich &mdash; die App fragt beim
+          Start automatisch danach.</p>
+      </details>
+      <details>
+        <summary>Kann ich damit jede gelöschte Datei zurückholen?</summary>
+        <p>Nein, das kann keine Software garantieren. Die Chancen sind gut, wenn seit dem
+          Löschen wenig auf den Datenträger geschrieben wurde. Wurde der Speicherbereich
+          bereits überschrieben, ist die Datei unwiderruflich weg.</p>
+      </details>
+      <details>
+        <summary>Funktioniert es auch mit internen Festplatten?</summary>
+        <p>Der Fokus liegt auf USB-Sticks, SD-Karten und externen Laufwerken. Interne
+          Systemlaufwerke werden technisch ebenfalls unterstützt, wir empfehlen aber,
+          nicht auf das Systemlaufwerk selbst zurückzuschreiben, während es aktiv läuft.</p>
+      </details>
+      <details>
+        <summary>Gibt es ein Abo oder versteckte Kosten?</summary>
+        <p>Nein. Es ist ein Einmalkauf. Updates und Sicherheits-Patches sind 3 Jahre
+          inklusive. Danach bleibt deine gekaufte Version unverändert nutzbar.</p>
+      </details>
+      <details>
+        <summary>Muss ich ein Konto anlegen?</summary>
+        <p>Nein. Nach dem Kauf bekommst du einen Freischaltcode. Beim ersten Start in die
+          App eingeben &mdash; fertig. Kein Konto, keine E-Mail-Pflicht, kein Cloud-Sync.</p>
+      </details>
+      <details>
+        <summary>Was passiert mit meinen Daten?</summary>
+        <p>Nichts verlässt dein Gerät. AI.-Ready Rescue benötigt keine Internetverbindung,
+          überträgt keine Telemetrie und sendet keine gescannten oder wiederhergestellten
+          Dateien an externe Server.</p>
+      </details>
+      <details>
+        <summary>Was passiert, wenn mir die Software nicht gefällt?</summary>
+        <p>Du hast 14 Tage gesetzliches Widerrufsrecht. Bei digitalen Inhalten erlischt das
+          Widerrufsrecht, wenn du der sofortigen Ausführung beim Kauf zustimmst &mdash; das
+          wird im Bestellprozess transparent angezeigt.</p>
+      </details>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="links">
+    <a href="HANDBUCH.html">Handbuch</a>
+    <a href="Dokumente/Technisches-Datenblatt.html">Technisches Datenblatt</a>
+    <a href="Dokumente/Lizenz.html">Lizenzvertrag (EULA)</a>
+    <a href="impressum.html">Impressum</a>
+    <a href="Dokumente/DSGVO-Erklaerung.html">Datenschutz</a>
+    <a href="agb.html">AGB</a>
+    <a href="widerruf.html">Widerruf</a>
+  </div>
+  <p class="copy">© Gerd Zimmermann GZ-AI.-Stacks · <a href="https://www.gz-ai-stacks.de">www.gz-ai-stacks.de</a></p>
+</footer>
+
+<script>
+(function(){
+  var html = document.documentElement;
+  var STORAGE_THEME = 'airescue_theme';
+  var STORAGE_ZOOM  = 'airescue_zoom';
+  var ZOOM_MIN = 0.6, ZOOM_MAX = 2.0, ZOOM_STEP = 0.1;
+
+  function applyTheme(theme){
+    html.setAttribute('data-theme', theme);
+    var btn = document.getElementById('themeBtn');
+    if(btn){
+      btn.textContent = (theme === 'light') ? '☀️' : '🌙';
+      btn.setAttribute('aria-pressed', theme === 'light' ? 'true' : 'false');
+      btn.setAttribute('aria-label', theme === 'light'
+        ? 'Auf Dunkelmodus umschalten'
+        : 'Auf Hellmodus umschalten');
+    }
+    var meta = document.querySelector('meta[name="theme-color"]');
+    if(meta) meta.setAttribute('content', theme === 'light' ? '#f4f6fb' : '#06081a');
+  }
+  function getInitialTheme(){
+    try{
+      var stored = localStorage.getItem(STORAGE_THEME);
+      if(stored === 'light' || stored === 'dark') return stored;
+    }catch(e){}
+    return 'dark';
+  }
+  applyTheme(getInitialTheme());
+
+  function applyZoom(z){
+    z = Math.max(ZOOM_MIN, Math.min(ZOOM_MAX, +z.toFixed(2)));
+    html.style.setProperty('--zoom', z);
+    var label = document.getElementById('zoomLabel');
+    if(label) label.textContent = Math.round(z * 100) + '%';
+    try{ localStorage.setItem(STORAGE_ZOOM, String(z)); }catch(e){}
+    return z;
+  }
+  function getInitialZoom(){
+    try{
+      var v = parseFloat(localStorage.getItem(STORAGE_ZOOM));
+      if(!isNaN(v) && v >= ZOOM_MIN && v <= ZOOM_MAX) return v;
+    }catch(e){}
+    return 1;
+  }
+  var currentZoom = getInitialZoom();
+  applyZoom(currentZoom);
+
+  document.addEventListener('DOMContentLoaded', function(){
+    applyTheme(getInitialTheme());
+    applyZoom(currentZoom);
+
+    var themeBtn = document.getElementById('themeBtn');
+    if(themeBtn) themeBtn.addEventListener('click', function(){
+      var next = html.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+      applyTheme(next);
+      try{ localStorage.setItem(STORAGE_THEME, next); }catch(e){}
+    });
+
+    var inBtn  = document.getElementById('zoomInBtn');
+    var outBtn = document.getElementById('zoomOutBtn');
+    var rstBtn = document.getElementById('zoomResetBtn');
+    if(inBtn)  inBtn.addEventListener('click',  function(){ currentZoom = applyZoom(currentZoom + ZOOM_STEP); });
+    if(outBtn) outBtn.addEventListener('click', function(){ currentZoom = applyZoom(currentZoom - ZOOM_STEP); });
+    if(rstBtn) rstBtn.addEventListener('click', function(){ currentZoom = applyZoom(1); });
+  });
+
+  document.addEventListener('keydown', function(e){
+    if(!(e.ctrlKey || e.metaKey)) return;
+    if(e.key === '+' || e.key === '=' || e.code === 'NumpadAdd'){
+      currentZoom = applyZoom(currentZoom + ZOOM_STEP); e.preventDefault();
+    } else if(e.key === '-' || e.code === 'NumpadSubtract'){
+      currentZoom = applyZoom(currentZoom - ZOOM_STEP); e.preventDefault();
+    } else if(e.key === '0' || e.code === 'Numpad0'){
+      currentZoom = applyZoom(1); e.preventDefault();
+    }
+  });
+})();
+</script>
+
+</body>
+</html>

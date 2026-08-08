@@ -1,0 +1,38 @@
+# --- NIEMALS hochladen (Geheimnisse / Source) ---
+AIRescue.cs
+*-master-codes.*
+*master.txt
+*master.md
+*master-code*
+CODE-ERKLÄRUNG.html
+
+# --- Ausführbare Datei & Build-Artefakte (Auslieferung läuft über Digistore, nicht GitHub) ---
+*.exe
+*.exe.bak
+
+# --- Backups & alte Versionen ---
+*.bak
+*.bak.html
+*.backup
+*-backup.*
+*_backup.*
+*.bak.*
+
+# --- Editor / IDE ---
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# --- OS-Müll ---
+Thumbs.db
+Desktop.ini
+.DS_Store
+$RECYCLE.BIN/
+
+# --- Temporäre / Arbeits-Dateien ---
+*.tmp
+*.log
+*-NOTIZ.txt
+*-TODO.txt

@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>💾 AI.-Ready Rescue – Handbuch</title>
+<meta name="description" content="Vollständiges Handbuch zu AI.-Ready Rescue: Installation, Freischaltung, Quick-Scan, Deep-Scan, Wiederherstellung, Tastatur-Kürzel, Troubleshooting und Glossar.">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --neon:#00ffaa; --neon2:#00b4ff; --neon3:#8c00ff; --neon-bloom:#ff0080;
+    --bg:#06081a; --panel:#0a0e28; --panel2:#0e1438;
+    --line:#1e2246; --line-strong:#00ffaa30;
+    --text:#c8d4f0; --text-bright:#e8ecff; --text-dim:#5a6a90;
+    --warn:#ff0080;
+    --shadow:0 0 30px #00ffaa20;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{max-width:100%;overflow-x:hidden}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:'Rajdhani',system-ui,'Segoe UI','Roboto',sans-serif;
+    background:
+      radial-gradient(1200px 600px at 50% -10%, rgba(0,255,170,0.10), transparent 60%),
+      radial-gradient(900px 500px at 90% 30%, rgba(0,180,255,0.06), transparent 60%),
+      var(--bg);
+    color:var(--text); line-height:1.65; padding:0 0 4rem; font-size:17px;
+  }
+  a{color:var(--neon2); text-decoration:none}
+  a:hover{color:var(--neon)}
+  a:focus-visible, button:focus-visible, summary:focus-visible{
+    outline:3px solid var(--neon); outline-offset:3px; border-radius:0.3rem;
+  }
+
+  .skip-link{
+    position:absolute; left:0.6rem; top:-3rem; z-index:50;
+    background:var(--neon); color:#001a10; font-weight:800;
+    padding:0.6rem 1rem; border-radius:0.6rem; text-decoration:none;
+    transition:top 0.15s;
+  }
+  .skip-link:focus{top:0.6rem}
+
+  header.hb-top{
+    position:sticky; top:0; z-index:10;
+    display:flex; align-items:center; gap:0.8rem; flex-wrap:wrap;
+    padding:0.9rem 1.2rem;
+    background:rgba(6,8,26,0.92);
+    border-bottom:1px solid var(--line-strong);
+    -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px);
+  }
+  header.hb-top .brand{
+    font-family:'Share Tech Mono',monospace;
+    font-weight:700; font-size:1.15rem; letter-spacing:0.05em;
+    background:linear-gradient(90deg, var(--neon), var(--neon2));
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  header.hb-top .sub{color:var(--text-dim); font-size:0.85rem; font-family:'Share Tech Mono',monospace; letter-spacing:0.1em}
+  header.hb-top .home{margin-left:auto}
+  .btn{
+    display:inline-block; text-decoration:none; cursor:pointer;
+    background:linear-gradient(90deg, rgba(0,255,170,0.18), rgba(0,180,255,0.18));
+    border:1px solid var(--line-strong); color:var(--text-bright);
+    padding:0.5rem 0.9rem; border-radius:0.6rem;
+    font-family:'Share Tech Mono',monospace;
+    font-weight:700; font-size:0.85rem; letter-spacing:0.05em;
+  }
+  .btn:hover{border-color:var(--neon); color:var(--neon)}
+
+  main{max-width:920px; margin:0 auto; padding:0 1.1rem}
+  .hero{text-align:center; padding:2.6rem 1rem 1.4rem}
+  .hero h1{
+    font-family:'Share Tech Mono',monospace;
+    font-size:clamp(1.8rem, 5vw, 2.8rem); line-height:1.15;
+    background:linear-gradient(90deg, var(--neon), var(--neon2), var(--neon-bloom));
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+    text-shadow:0 0 40px rgba(0,255,170,0.4);
+    letter-spacing:0.04em;
+  }
+  .hero p{color:var(--text-dim); margin-top:0.6rem; font-size:1.05rem}
+  .hero .v{
+    display:inline-block; margin-top:0.8rem;
+    font-family:'Share Tech Mono',monospace;
+    font-size:0.78rem; letter-spacing:0.18em;
+    color:var(--neon); border:1px solid var(--line-strong);
+    padding:4px 12px; border-radius:2px;
+  }
+
+  nav.toc{
+    background:var(--panel); border:1px solid var(--line-strong);
+    border-radius:1rem; padding:1.2rem 1.3rem; margin:1.6rem 0;
+    box-shadow:var(--shadow);
+  }
+  nav.toc h2{
+    font-family:'Share Tech Mono',monospace;
+    font-size:0.95rem; color:var(--neon); margin-bottom:0.8rem;
+    text-transform:uppercase; letter-spacing:0.12em;
+  }
+  nav.toc ol{
+    list-style:none; display:grid; grid-template-columns:1fr; gap:0.35rem;
+    counter-reset:toc;
+  }
+  @media(min-width:560px){nav.toc ol{grid-template-columns:1fr 1fr}}
+  nav.toc li{counter-increment:toc}
+  nav.toc a{
+    display:block; text-decoration:none; color:var(--text);
+    padding:0.5rem 0.7rem; border-radius:0.5rem;
+    transition:background 0.15s;
+  }
+  nav.toc a::before{
+    content:counter(toc, decimal-leading-zero) ".";
+    color:var(--neon-bloom); font-family:'Share Tech Mono',monospace;
+    font-weight:700; margin-right:0.6rem;
+  }
+  nav.toc a:hover{background:var(--panel2); color:var(--neon)}
+
+  section.card{
+    background:var(--panel); border:1px solid var(--line-strong);
+    border-radius:1rem; padding:1.5rem 1.4rem; margin:1.2rem 0;
+    box-shadow:0 2px 16px rgba(0,0,0,0.3);
+  }
+  section.card h2{
+    font-family:'Share Tech Mono',monospace;
+    font-size:1.4rem; color:var(--text-bright);
+    margin-bottom:0.9rem;
+    display:flex; align-items:center; gap:0.5rem;
+    border-left:4px solid var(--neon);
+    padding-left:0.8rem;
+    letter-spacing:0.03em;
+  }
+  section.card h3{
+    font-family:'Share Tech Mono',monospace;
+    font-size:1.05rem; margin:1.4rem 0 0.5rem;
+    color:var(--neon); letter-spacing:0.04em;
+  }
+  section.card h4{
+    font-size:1rem; margin:1rem 0 0.4rem;
+    color:var(--neon-bloom);
+  }
+  section.card p{margin:0.6rem 0; color:var(--text)}
+  section.card ul, section.card ol{margin:0.5rem 0 0.6rem 1.4rem}
+  section.card li{margin:0.4rem 0}
+  strong{color:var(--text-bright)}
+  code{
+    background:var(--panel2); border:1px solid var(--line-strong);
+    border-radius:0.4rem; padding:0.1rem 0.45rem;
+    font-family:'Share Tech Mono','Consolas',monospace;
+    color:var(--neon); font-size:0.92em;
+  }
+  kbd{
+    background:var(--panel2); border:1px solid var(--line-strong);
+    border-bottom-width:2px;
+    border-radius:0.3rem; padding:0.05rem 0.5rem;
+    font-family:'Share Tech Mono',monospace;
+    color:var(--text-bright); font-size:0.88em;
+  }
+
+  .callout{
+    border-radius:0.7rem; padding:0.95rem 1.1rem; margin:1rem 0;
+    border:1px solid var(--line-strong); background:var(--panel2);
+    display:flex; gap:0.8rem; align-items:flex-start;
+  }
+  .callout .ic{font-size:1.4rem; flex:0 0 auto; line-height:1.2}
+  .callout.warn{border-color:rgba(255,0,128,0.55); background:rgba(255,0,128,0.08)}
+  .callout.tip{border-color:rgba(0,255,170,0.5); background:rgba(0,255,170,0.07)}
+  .callout.info{border-color:rgba(0,180,255,0.5); background:rgba(0,180,255,0.07)}
+  .callout.bloom{border-color:rgba(255,0,128,0.5); background:rgba(255,0,128,0.07)}
+  .callout strong{display:block; color:var(--text-bright); margin-bottom:0.25rem}
+
+  ol.steps{counter-reset:step; list-style:none; margin-left:0}
+  ol.steps li{
+    position:relative; padding-left:2.4rem;
+    counter-increment:step; margin:0.7rem 0;
+  }
+  ol.steps li::before{
+    content:counter(step);
+    position:absolute; left:0; top:0.05rem;
+    width:1.8rem; height:1.8rem; line-height:1.8rem;
+    text-align:center;
+    background:var(--neon); color:#001a10;
+    border-radius:50%;
+    font-family:'Share Tech Mono',monospace;
+    font-weight:700; font-size:0.85rem;
+    box-shadow:0 0 12px rgba(0,255,170,0.4);
+  }
+
+  table.gloss{
+    width:100%; border-collapse:collapse; margin:1rem 0;
+    background:var(--panel2); border:1px solid var(--line-strong);
+    border-radius:0.5rem; overflow:hidden;
+  }
+  table.gloss th, table.gloss td{
+    padding:0.7rem 0.9rem; text-align:left;
+    border-bottom:1px solid var(--line); vertical-align:top;
+  }
+  table.gloss th{
+    background:var(--panel); color:var(--neon);
+    font-family:'Share Tech Mono',monospace; font-size:0.85rem;
+    letter-spacing:0.06em; text-transform:uppercase;
+  }
+  table.gloss td:first-child{
+    color:var(--neon-bloom); font-weight:700;
+    font-family:'Share Tech Mono',monospace; white-space:nowrap;
+  }
+  table.gloss tr:last-child td{border-bottom:none}
+  @media(max-width:600px){
+    table.gloss, table.gloss tbody, table.gloss tr, table.gloss td, table.gloss th{
+      display:block; width:100%;
+    }
+    table.gloss th{border-bottom:2px solid var(--neon)}
+    table.gloss td{border-bottom:1px solid var(--line)}
+    table.gloss td:first-child{padding-bottom:0.2rem}
+  }
+
+  details.trouble{
+    background:var(--panel2); border:1px solid var(--line-strong);
+    border-radius:0.6rem; padding:0.8rem 1.1rem; margin:0.6rem 0;
+  }
+  details.trouble summary{
+    cursor:pointer; font-weight:700; color:var(--neon);
+    font-family:'Share Tech Mono',monospace; font-size:0.95rem;
+    list-style:none; letter-spacing:0.03em;
+  }
+  details.trouble summary::before{
+    content:'+ '; color:var(--neon-bloom);
+  }
+  details.trouble[open] summary::before{content:'− '}
+  details.trouble summary::-webkit-details-marker{display:none}
+  details.trouble p, details.trouble ul{margin-top:0.6rem; color:var(--text)}
+
+  .keys{display:grid; grid-template-columns:auto 1fr; gap:0.5rem 1rem; margin:0.6rem 0}
+  .keys kbd{justify-self:start}
+
+  footer.hb-foot{
+    text-align:center; margin-top:3rem; padding:1.6rem 1rem;
+    color:var(--text-dim); font-size:0.88rem;
+    border-top:1px solid var(--line-strong);
+  }
+  footer.hb-foot a{color:var(--neon)}
+
+  @media (prefers-reduced-motion:reduce){
+    *, *::before, *::after{animation:none !important; transition:none !important; scroll-behavior:auto !important}
+  }
+  @media (prefers-contrast:more){
+    body{background:#000; color:#fff}
+    section.card, nav.toc, .callout, details.trouble{border-width:2px}
+  }
+  @media print{
+    body{background:#fff; color:#000}
+    header.hb-top{position:static; background:#fff}
+    nav.toc a, section.card, .callout, details.trouble{background:#fff !important; color:#000 !important; border-color:#999 !important}
+    .hero h1, header.hb-top .brand{color:#000 !important; background:none !important; -webkit-text-fill-color:#000 !important}
+  }
+</style>
+</head>
+<body>
+
+<a href="#inhalt" class="skip-link">Zum Inhalt springen</a>
+
+<header class="hb-top" role="banner">
+  <div>
+    <div class="brand">💾 AI.-READY RESCUE</div>
+    <div class="sub">HANDBUCH &middot; v1.0</div>
+  </div>
+  <a class="btn home" href="index.html">← Zur Startseite</a>
+</header>
+
+<main id="inhalt">
+
+  <section class="hero">
+    <h1>AI.-Ready Rescue &mdash; Handbuch</h1>
+    <p>Gelöschte Dateien finden und wiederherstellen &mdash; Schritt für Schritt erklärt.</p>
+    <div class="v">VERSION 1.0 &middot; STAND 08/2026</div>
+  </section>
+
+  <nav class="toc" aria-label="Inhaltsverzeichnis">
+    <h2>Inhalt</h2>
+    <ol>
+      <li><a href="#start">Installation &amp; erster Start</a></li>
+      <li><a href="#freischaltung">Freischaltung</a></li>
+      <li><a href="#adminrechte">Administratorrechte</a></li>
+      <li><a href="#oberflaeche">Oberfläche &amp; Bedienung</a></li>
+      <li><a href="#quickscan">Quick-Scan durchführen</a></li>
+      <li><a href="#deepscan">Deep-Scan durchführen</a></li>
+      <li><a href="#status">Wiederherstellbarkeits-Status verstehen</a></li>
+      <li><a href="#wiederherstellen">Dateien wiederherstellen</a></li>
+      <li><a href="#tastatur">Tastatur-Kürzel</a></li>
+      <li><a href="#tipps">Tipps für bessere Erfolgschancen</a></li>
+      <li><a href="#sicherheit">Sicherheit &amp; Datenschutz</a></li>
+      <li><a href="#glossar">Glossar</a></li>
+      <li><a href="#troubleshooting">Troubleshooting</a></li>
+      <li><a href="#support">Support &amp; Kontakt</a></li>
+    </ol>
+  </nav>
+
+  <section class="card" id="start">
+    <h2>1. Installation &amp; erster Start</h2>
+    <p>AI.-Ready Rescue ist eine einzelne ausführbare Datei &mdash; es gibt keinen Installer und
+      keine Registrierung im System außer dem kleinen Freischaltcode-Speicher.</p>
+    <ol class="steps">
+      <li>Heruntergeladenes ZIP entpacken (z. B. nach <code>Dokumente\AI-Ready Rescue\</code>).</li>
+      <li><code>AI.-Ready Rescue.exe</code> doppelklicken.</li>
+      <li>Beim allerersten Start erscheint der <strong>Freischaltungs-Dialog</strong> (siehe nächster Abschnitt).</li>
+      <li>Danach fragt Windows ggf. nach Administratorrechten (siehe Abschnitt 3).</li>
+    </ol>
+    <div class="callout tip">
+      <span class="ic" aria-hidden="true">💡</span>
+      <div><strong>Systemvoraussetzungen:</strong> Windows 10 oder 11 (64-Bit). Kein .NET-Download
+      nötig &mdash; die benötigte Laufzeitumgebung ist bei aktuellem Windows bereits vorinstalliert.</div>
+    </div>
+  </section>
+
+  <section class="card" id="freischaltung">
+    <h2>2. Freischaltung</h2>
+    <p>Nach dem Kauf über Digistore24 erhältst du per E-Mail deinen persönlichen Freischaltcode.</p>
+    <ol class="steps">
+      <li>Beim ersten Start öffnet sich automatisch der Freischaltungs-Dialog.</li>
+      <li>Freischaltcode aus der Bestell-E-Mail per Copy-Paste in das Eingabefeld einfügen.</li>
+      <li>Auf <strong>„⚡ FREISCHALTEN"</strong> klicken.</li>
+      <li>Bei gültigem Code startet die App direkt und merkt sich die Freischaltung lokal &mdash;
+        beim nächsten Start erscheint der Dialog nicht erneut.</li>
+    </ol>
+    <div class="callout info">
+      <span class="ic" aria-hidden="true">📍</span>
+      <div>Die Freischaltung wird lokal unter <code>%AppData%\GZ-AI-Stacks\AIRescue\</code>
+      gespeichert &mdash; kein Konto, keine Internetverbindung für die Prüfung nötig.</div>
+    </div>
+  </section>
+
+  <section class="card" id="adminrechte">
+    <h2>3. Administratorrechte</h2>
+    <p>Für den <strong>Deep-Scan</strong> braucht Windows Administratorrechte, weil dabei direkt auf
+      den Datenträger zugegriffen wird (Raw Disk Access) &mdash; ein normaler Nutzer-Zugriff reicht
+      dafür nicht aus.</p>
+    <ol class="steps">
+      <li>Ist die App nicht bereits erhöht gestartet, erscheint automatisch ein Dialog:
+        „Admin-Rechte werden benötigt für den Datenträger-Rohzugriff."</li>
+      <li>Mit <strong>„⚡ JA, STARTEN"</strong> bestätigen &mdash; die App startet sich selbst mit
+        Administratorrechten neu (Windows zeigt dafür die bekannte UAC-Sicherheitsabfrage).</li>
+      <li>Wählst du „NEIN", läuft die App weiter, aber der Deep-Scan funktioniert dann nicht.</li>
+    </ol>
+    <div class="callout warn">
+      <span class="ic" aria-hidden="true">⚠</span>
+      <div>Der Quick-Scan funktioniert auch <strong>ohne</strong> Administratorrechte, da er nur
+      Papierkorb und sichtbare/versteckte Dateien über das normale Dateisystem liest.</div>
+    </div>
+  </section>
+
+  <section class="card" id="oberflaeche">
+    <h2>4. Oberfläche &amp; Bedienung</h2>
+    <p>Die Oberfläche gliedert sich in vier Bereiche:</p>
+    <ul>
+      <li><strong>Laufwerksauswahl</strong> oben &mdash; Dropdown mit allen erkannten Laufwerken (USB,
+        Festplatte, Netzwerk, CD/DVD) samt Typ, Größe und Dateisystem. Der Kreis-Button daneben
+        aktualisiert die Liste neu, z. B. nach dem Einstecken eines USB-Sticks.</li>
+      <li><strong>Aktions-Buttons</strong> &mdash; Quick-Scan, Deep-Scan und Wiederherstellen.</li>
+      <li><strong>Trefferliste</strong> &mdash; sortierbare Tabelle mit Dateiname, Größe, Typ, Status,
+        Dateisystem, Datum und Fundort. Mehrfachauswahl mit <kbd>Strg</kbd>+Klick oder
+        <kbd>Umschalt</kbd>+Klick möglich.</li>
+      <li><strong>Statusleiste</strong> unten &mdash; zeigt Fortschritt während eines Scans bzw. einer
+        Wiederherstellung.</li>
+    </ul>
+  </section>
+
+  <section class="card" id="quickscan">
+    <h2>5. Quick-Scan durchführen</h2>
+    <p>Der Quick-Scan ist der richtige erste Schritt in fast jedem Fall &mdash; er ist in Sekunden
+      fertig und braucht keine Administratorrechte.</p>
+    <ol class="steps">
+      <li>Laufwerk im Dropdown auswählen.</li>
+      <li>Auf <strong>„⚡ QUICK-SCAN"</strong> klicken (oder <kbd>F5</kbd> drücken).</li>
+      <li>Die App durchsucht nacheinander Papierkorb, versteckte/System-Dateien und die
+        Verzeichniseinträge des Dateisystems.</li>
+      <li>Ergebnisse erscheinen in der Trefferliste.</li>
+    </ol>
+    <div class="callout tip">
+      <span class="ic" aria-hidden="true">💡</span>
+      <div>Findet der Quick-Scan die gesuchte Datei bereits mit Status <strong>„Gut (Papierkorb)"</strong>,
+      ist ein Deep-Scan meist gar nicht nötig &mdash; diese Dateien lassen sich 1:1 zurückkopieren.</div>
+    </div>
+  </section>
+
+  <section class="card" id="deepscan">
+    <h2>6. Deep-Scan durchführen</h2>
+    <p>Der Deep-Scan durchsucht den <strong>gesamten Datenträger sektorweise</strong> &mdash; sowohl
+      nach übrig gebliebenen Verzeichniseinträgen als auch nach bekannten Datei-Signaturen
+      (Bild-, Dokument- und Video-Formate). Das dauert deutlich länger als der Quick-Scan, findet
+      dafür aber auch Dateien, die der Quick-Scan übersieht.</p>
+    <ol class="steps">
+      <li>Laufwerk auswählen.</li>
+      <li>Auf <strong>„⬜ DEEP-SCAN"</strong> klicken (oder <kbd>Strg</kbd>+<kbd>D</kbd>).</li>
+      <li>Sicherheitsabfrage mit „Ja" bestätigen.</li>
+      <li>Administratorrechte-Dialog ggf. bestätigen (siehe Abschnitt 3).</li>
+      <li>Fortschrittsbalken abwarten &mdash; je nach Datenträgergröße mehrere Minuten.</li>
+    </ol>
+    <div class="callout warn">
+      <span class="ic" aria-hidden="true">⚠</span>
+      <div>Während eines laufenden Scans sind Laufwerksauswahl und die anderen Aktions-Buttons
+      gesperrt, damit keine widersprüchlichen Vorgänge gleichzeitig laufen. Einfach abwarten,
+      bis die Statuszeile „fertig" meldet.</div>
+    </div>
+  </section>
+
+  <section class="card" id="status">
+    <h2>7. Wiederherstellbarkeits-Status verstehen</h2>
+    <p>Jeder Treffer bekommt eine Status-Einschätzung in der Spalte „Status":</p>
+    <table class="gloss">
+      <tr><th>Status</th><th>Bedeutung</th></tr>
+      <tr><td>Gut (Papierkorb)</td><td>Datei liegt noch vollständig im Papierkorb &mdash; sichere Wiederherstellung.</td></tr>
+      <tr><td>Versteckt</td><td>Datei ist technisch noch vorhanden, nur mit Versteckt-/System-Attribut.</td></tr>
+      <tr><td>Gut</td><td>Verzeichniseintrag intakt, Startbereich plausibel &mdash; gute Chancen.</td></tr>
+      <tr><td>Teilweise</td><td>Verzeichniseintrag gefunden, aber Hinweise auf mögliche Überschreibung.</td></tr>
+      <tr><td>Gefunden (Deep)</td><td>Über Datei-Signatur im Deep-Scan gefunden &mdash; Name und Größe sind Schätzungen.</td></tr>
+      <tr><td>Gefunden (NTFS)</td><td>Über einen gelöschten MFT-Eintrag gefunden.</td></tr>
+    </table>
+    <div class="callout warn">
+      <span class="ic" aria-hidden="true">⚠</span>
+      <div><strong>Keine Garantie:</strong> Auch bei Status „Gut" kann die Wiederherstellung im
+      Einzelfall fehlschlagen oder eine beschädigte Datei liefern. Die Einschätzung ist eine
+      Orientierung, kein Versprechen.</div>
+    </div>
+  </section>
+
+  <section class="card" id="wiederherstellen">
+    <h2>8. Dateien wiederherstellen</h2>
+    <ol class="steps">
+      <li>Gewünschte Datei(en) in der Trefferliste auswählen (Mehrfachauswahl möglich).</li>
+      <li>Auf <strong>„✔ WIEDERHERSTELLEN"</strong> klicken (oder <kbd>Strg</kbd>+<kbd>R</kbd>).</li>
+      <li>Zielordner auswählen &mdash; <strong>am besten auf einem anderen Laufwerk</strong> als die Quelle.</li>
+      <li>Bei Auswahl desselben Laufwerks erscheint eine deutliche Warnung &mdash; nur fortfahren,
+        wenn kein anderes Laufwerk zur Verfügung steht.</li>
+      <li>Fortschritt abwarten. Am Ende zeigt eine Zusammenfassung, wie viele Dateien erfolgreich
+        wiederhergestellt wurden.</li>
+    </ol>
+    <div class="callout warn">
+      <span class="ic" aria-hidden="true">⚠</span>
+      <div><strong>Warum ein anderes Laufwerk?</strong> Solange gelöschte Dateien noch nicht
+      überschrieben sind, lassen sie sich retten. Schreibst du die wiederhergestellten Dateien
+      zurück auf denselben Datenträger, kannst du genau die Bereiche überschreiben, aus denen
+      weitere Dateien noch zu retten wären.</div>
+    </div>
+  </section>
+
+  <section class="card" id="tastatur">
+    <h2>9. Tastatur-Kürzel</h2>
+    <div class="keys">
+      <kbd>F5</kbd> <span>Quick-Scan starten</span>
+      <kbd>Strg</kbd>+<kbd>D</kbd> <span>Deep-Scan starten</span>
+      <kbd>Strg</kbd>+<kbd>R</kbd> <span>Ausgewählte Dateien wiederherstellen</span>
+      <kbd>F1</kbd> <span>Hilfe-Dialog mit allen Kürzeln anzeigen</span>
+    </div>
+  </section>
+
+  <section class="card" id="tipps">
+    <h2>10. Tipps für bessere Erfolgschancen</h2>
+    <ul>
+      <li><strong>Sofort handeln:</strong> Je weniger seit dem Löschen auf den Datenträger
+        geschrieben wurde, desto besser die Chancen.</li>
+      <li><strong>Datenträger nicht mehr beschreiben:</strong> Keine neuen Dateien speichern,
+        nicht formatieren, keine weiteren Programme installieren, bis der Scan abgeschlossen ist.</li>
+      <li><strong>Quick-Scan zuerst:</strong> Schneller und für den häufigsten Fall ausreichend.</li>
+      <li><strong>Wiederherstellte Dateien prüfen:</strong> Nach der Wiederherstellung öffnen und
+        auf Vollständigkeit kontrollieren, besonders bei Status „Teilweise" oder „Gefunden (Deep)".</li>
+    </ul>
+  </section>
+
+  <section class="card" id="sicherheit">
+    <h2>11. Sicherheit &amp; Datenschutz</h2>
+    <ul>
+      <li>Keine Internetverbindung nötig &mdash; die App funktioniert komplett offline.</li>
+      <li>Keine Telemetrie, keine Absturzberichte, kein Tracking.</li>
+      <li>Gescannte und wiederhergestellte Dateien verlassen niemals dein Gerät.</li>
+      <li>Der Freischaltcode wird lokal gespeichert, nicht an einen Server übertragen.</li>
+    </ul>
+  </section>
+
+  <section class="card" id="glossar">
+    <h2>12. Glossar</h2>
+    <table class="gloss">
+      <tr><th>Begriff</th><th>Bedeutung</th></tr>
+      <tr><td>Quick-Scan</td><td>Schneller Scan über Papierkorb, versteckte Dateien und normale Verzeichniseinträge, ohne Admin-Rechte.</td></tr>
+      <tr><td>Deep-Scan</td><td>Vollständiger, sektorweiser Scan des gesamten Datenträgers inkl. Signatur-Suche, benötigt Admin-Rechte.</td></tr>
+      <tr><td>Raw Disk Access</td><td>Direkter Zugriff auf einen Datenträger unterhalb des Dateisystems.</td></tr>
+      <tr><td>FAT32 / NTFS</td><td>Die beiden von AI.-Ready Rescue unterstützten Windows-Dateisysteme.</td></tr>
+      <tr><td>File Carving</td><td>Dateien anhand ihrer Anfangs-Bytes wiederfinden, auch ohne Verzeichniseintrag.</td></tr>
+      <tr><td>Freischaltcode</td><td>Persönlicher Code aus der Kauf-E-Mail zur einmaligen Aktivierung der Vollversion.</td></tr>
+    </table>
+  </section>
+
+  <section class="card" id="troubleshooting">
+    <h2>13. Troubleshooting</h2>
+
+    <details class="trouble">
+      <summary>Freischaltcode wird nicht akzeptiert</summary>
+      <ul>
+        <li>Code per Copy-Paste aus der Digistore-Mail übernehmen, nicht abtippen.</li>
+        <li>Keine Leerzeichen am Anfang/Ende, exakte Groß-/Kleinschreibung.</li>
+        <li>Weiterhin kein Erfolg? E-Mail an
+          <a href="mailto:gz.ai.stacks@gmail.com">gz.ai.stacks@gmail.com</a> mit der
+          Bestellnummer von Digistore24.</li>
+      </ul>
+    </details>
+
+    <details class="trouble">
+      <summary>Deep-Scan startet nicht / bricht sofort mit Fehler ab</summary>
+      <ul>
+        <li>Admin-Rechte-Dialog bestätigt? Ohne Administratorrechte funktioniert der Rohzugriff nicht.</li>
+        <li>Ist der Datenträger noch angeschlossen und nicht durch ein anderes Programm blockiert?</li>
+        <li>Antivirus-Software kann Rohzugriffe auf Datenträger blockieren &mdash; kurzzeitig
+          Ausnahme für AI.-Ready Rescue eintragen.</li>
+      </ul>
+    </details>
+
+    <details class="trouble">
+      <summary>USB-Stick wird im Dropdown nicht angezeigt</summary>
+      <ul>
+        <li>Kreis-Button (🔄) neben der Laufwerksauswahl klicken, um die Liste zu aktualisieren.</li>
+        <li>Stick in einen anderen USB-Anschluss stecken.</li>
+        <li>Windows-Explorer prüfen, ob der Stick dort überhaupt erkannt wird.</li>
+      </ul>
+    </details>
+
+    <details class="trouble">
+      <summary>Wiederhergestellte Datei lässt sich nicht öffnen / ist beschädigt</summary>
+      <ul>
+        <li>Bei Status „Teilweise" oder „Gefunden (Deep)" war der zugrunde liegende Speicherbereich
+          bereits teilweise überschrieben &mdash; das kann keine Software vollständig ausgleichen.</li>
+        <li>Bei Fotos/Videos: manchmal öffnet ein anderes Programm die Datei trotzdem
+          (z. B. VLC statt Windows Fotos-App), da manche Player robuster gegen fehlende Endstücke sind.</li>
+      </ul>
+    </details>
+
+    <details class="trouble">
+      <summary>Scan dauert sehr lange</summary>
+      <ul>
+        <li>Deep-Scan liest den kompletten Datenträger &mdash; bei großen Festplatten kann das
+          mehrere Stunden dauern statt Minuten bei einem kleinen USB-Stick.</li>
+        <li>Andere Programme, die gleichzeitig auf den Datenträger zugreifen, verlangsamen den Scan zusätzlich.</li>
+      </ul>
+    </details>
+
+  </section>
+
+  <section class="card" id="support">
+    <h2>14. Support &amp; Kontakt</h2>
+    <p>Du hast eine Frage, einen Bug entdeckt oder einen Vorschlag?</p>
+    <p>
+      <strong>E-Mail:</strong> <a href="mailto:gz.ai.stacks@gmail.com">gz.ai.stacks@gmail.com</a><br>
+      <strong>Web:</strong> <a href="https://www.gz-ai-stacks.de">www.gz-ai-stacks.de</a><br>
+      <strong>Telefon:</strong> 0151 177 37 336
+    </p>
+    <p>Antwort meist innerhalb von 1&ndash;2 Werktagen. Bei Bug-Berichten hilft es, kurz dazu zu schreiben:</p>
+    <ul>
+      <li>Welche Windows-Version?</li>
+      <li>Welches Laufwerk / Dateisystem (FAT32/NTFS)?</li>
+      <li>Was wolltest du tun &mdash; was ist stattdessen passiert?</li>
+      <li>Fehlermeldung möglichst wörtlich (Screenshot hilft).</li>
+    </ul>
+
+    <div class="callout tip">
+      <span class="ic" aria-hidden="true">💚</span>
+      <div>AI.-Ready Rescue ist ein laufendes Projekt &mdash; Rückmeldungen aus der Praxis helfen
+      dabei, es besser zu machen. Schreib mir, was du brauchst.</div>
+    </div>
+
+    <p style="margin-top:1.5rem">
+      <strong>Anbieter:</strong><br>
+      Gerd Zimmermann GZ-AI.-Stacks<br>
+      Görlitzer Straße 10, 91315 Höchstadt a.d. Aisch, Deutschland<br>
+      Kleinunternehmer gemäß § 19 UStG
+    </p>
+    <p>
+      <a href="agb.html">AGB</a> · <a href="widerruf.html">Widerruf</a> ·
+      <a href="Dokumente/DSGVO-Erklaerung.html">Datenschutz</a> · <a href="impressum.html">Impressum</a> ·
+      <a href="Dokumente/Lizenz.html">Lizenzvertrag (EULA)</a>
+    </p>
+  </section>
+
+</main>
+
+<footer class="hb-foot">
+  © Gerd Zimmermann GZ-AI.-Stacks &middot; AI.-Ready Rescue-Handbuch v1.0 &middot;
+  <a href="https://www.gz-ai-stacks.de">www.gz-ai-stacks.de</a>
+</footer>
+
+</body>
+</html>
